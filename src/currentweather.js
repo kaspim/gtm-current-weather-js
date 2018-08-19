@@ -38,8 +38,8 @@ var expire = 60; // Time to store weather information in minutes
 		
 		var date = new Date();
 		date.setTime(date.getTime() + (expire * 60000));
-		document.cookie = 'weather_current=' + weather + '; expires=' + date.toGMTString() + '; path=/';
 		document.cookie = 'weather_station=' + station + '; expires=' + date.toGMTString() + '; path=/';
+		document.cookie = 'weather_current=' + weather + '; expires=' + date.toGMTString() + '; path=/';
 		document.cookie = 'weather_temperature=' + temp + '; expires=' + date.toGMTString() + '; path=/';
 	}
 	
@@ -55,9 +55,9 @@ var expire = 60; // Time to store weather information in minutes
 	}
 	
 	if (navigator.cookieEnabled) {
+		var station = (document.cookie.match(/^(?:.*;)?\s*weather_station=\s*([^;]+)(?:.*)?$/)||[,null])[1];
 		var weather = (document.cookie.match(/^(?:.*;)?\s*weather_current=\s*([^;]+)(?:.*)?$/)||[,null])[1];
 		var temp    = (document.cookie.match(/^(?:.*;)?\s*weather_temperature=\s*([^;]+)(?:.*)?$/)||[,null])[1];
-		var station = (document.cookie.match(/^(?:.*;)?\s*weather_station=\s*([^;]+)(?:.*)?$/)||[,null])[1];
 		
 		if (weather !== null && temp !== null && station !== null) {
 			pushWeather(station, weather, temp);
