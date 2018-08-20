@@ -19,7 +19,7 @@ The following information is sent to the data layer:
 
 ```
 {
-	event: 'weather',              // The name of the custom event
+	event: 'weather',                    // The name of the custom event
 	weather: {
 		station: 'Prague',           // The nearest place with weather information
 		main: 'Clear',               // Grouped weather information (Clear, Cloudy, Rain, ...)
