@@ -1,5 +1,5 @@
-var apikey = 'KEY'; // Your API key from https://openweathermap.org/
-var expire = 60; // Time to store weather information in minutes
+var apikey = 'KEY'; // Your API key from https://openweathermap.org
+var expire = 60;    // Time to store weather information in minutes
 
 (function(api, units, expire) {
 	

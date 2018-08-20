@@ -1,24 +1,30 @@
-#### Settings
+### Current weather for GTM
+The script collects weather data for the current location of the visitor and sends it to the GTM data layer. 
+
+#### settings
 There are two variables you need to define:
-* The API key ```apikey``` that you get at [openweathermap.org](https://openweathermap.org/price). This service offers free access with a limit of 60 calls per minute.
-* Time to store ```expire``` weather information in cookies. By saving information, you avoid unnecessary API calls.
+* The API key that you get at [openweathermap.org](https://openweathermap.org/price). This service offers free access with a limit of 60 calls per minute.
+* Time to store weather information in cookies. By saving information, you avoid unnecessary API calls.
 
-#### Minified Script
+#### minified script
 ```
-	var apikey = 'KEY';
-	var expire = 60;
-	
-	!function(e,t,a){function n(e,t,a){var n=new XMLHttpRequest;n.onreadystatechange=function(){n.readyState===XMLHttpRequest.DONE&&(200===n.status?t&&t(JSON.parse(n.responseText)):a&&a(n))},n.open('GET',e,!0),n.send()}function i(e,t,a){window.dataLayer=window.dataLayer||[],dataLayer.push({event:'weather',station:e,weather:t,temperature:a})}function o(o){n('https://api.openweathermap.org/data/2.5/find?lat='+o.ipgeo.latitude+'&lon='+o.ipgeo.longtitude+'&cnt=1&units='+t+'&appid='+e,function(e){!function(e){var t=e.list[0].name,n=e.list[0].weather[0].description,o=Math.round(e.list[0].main.temp);i(t,n,o);var r=new Date;r.setTime(r.getTime()+6e4*a),document.cookie='weather_current='+n+'; expires='+r.toGMTString()+'; path=/',document.cookie='weather_station='+t+'; expires='+r.toGMTString()+'; path=/',document.cookie='weather_temperature='+o+'; expires='+r.toGMTString()+'; path=/'}(e)})}if(navigator.cookieEnabled){var r=(document.cookie.match(/^(?:.*;)?\s*weather_current=\s*([^;]+)(?:.*)?$/)||[,null])[1],u=(document.cookie.match(/^(?:.*;)?\s*weather_temperature=\s*([^;]+)(?:.*)?$/)||[,null])[1],p=(document.cookie.match(/^(?:.*;)?\s*weather_station=\s*([^;]+)(?:.*)?$/)||[,null])[1];null!==r&&null!==u&&null!==p?i(p,r,u):n('https://apps.martinkaspar.net/api/geo/',function(e){o(e)})}}(apikey,'metric',expire);
+var apikey = 'KEY'; // Your API key from https://openweathermap.org
+var expire = 60;    // Time to store weather information in minutes
+
+!function(t,e,a){function n(t,e,a){var n=new XMLHttpRequest;n.onreadystatechange=function(){n.readyState===XMLHttpRequest.DONE&&(200===n.status?e&&e(JSON.parse(n.responseText)):a&&a(n))},n.open('GET',t,!0),n.send()}function i(t,e,a,n){window.dataLayer=window.dataLayer||[],dataLayer.push({event:'weather',weather:{station:t,main:e,description:a,temperature:n}})}function o(o){n('https://api.openweathermap.org/data/2.5/find?lat='+o.ipgeo.latitude+'&lon='+o.ipgeo.longtitude+'&cnt=1&units='+e+'&appid='+t,function(t){!function(t){var e=t.list[0].name,n=t.list[0].weather[0].main,o=t.list[0].weather[0].description,r=Math.round(t.list[0].main.temp);i(e,n,o,r);var s=new Date;s.setTime(s.getTime()+6e4*a),document.cookie='gtm.weather.station='+e+'; expires='+s.toGMTString()+'; path=/',document.cookie='gtm.weather.main='+n+'; expires='+s.toGMTString()+'; path=/',document.cookie='gtm.weather.detail='+o+'; expires='+s.toGMTString()+'; path=/',document.cookie='gtm.weather.temperature='+r+'; expires='+s.toGMTString()+'; path=/'}(t)})}if(navigator.cookieEnabled){var r=(document.cookie.match(/^(?:.*;)?\s*gtm.weather.station=\s*([^;]+)(?:.*)?$/)||[,null])[1],s=(document.cookie.match(/^(?:.*;)?\s*gtm.weather.main=\s*([^;]+)(?:.*)?$/)||[,null])[1],m=(document.cookie.match(/^(?:.*;)?\s*gtm.weather.detail=\s*([^;]+)(?:.*)?$/)||[,null])[1],p=(document.cookie.match(/^(?:.*;)?\s*gtm.weather.temperature=\s*([^;]+)(?:.*)?$/)||[,null])[1];null!==r&&null!==s&&null!==m&&null!==p?i(r,s,m,p):n('https://apps.martinkaspar.net/api/geo/',function(t){o(t)})}}(apikey,'metric',expire);
 ```
 
-#### DataLayer
+#### dataLayer
 The following information is sent to the data layer:
 
 ```
 {
-	event: 'weather',        // The name of the custom event
-	station: 'Prague',       // The nearest place with weather information
-	weather: 'Sky is clear', // Current weather information
-	temperature: 30          // Current temperature in celsius
+	event: 'weather',              // The name of the custom event
+	weather: {
+		station: 'Prague',           // The nearest place with weather information
+		main: 'Clear',               // Grouped weather information (Clear, Cloudy, Rain, ...)
+		description: 'Sky is clear', // Detailed weather information (Sky is clear, Light rain, Heavy rain, ...)
+		temperature: 30              // Temperature in celsius
+	}
 }
 ```
